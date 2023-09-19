@@ -80,10 +80,7 @@ public class task2 {
         } else if (num == 2) {
             return 1;
         }
-        int a = 0;
-        int b = 0;
-        int c = 1;
-        int d;
+        int a = 0, b = 0, c = 0, d;
         for (int i = 3; i <= num - 1; i++) {
             d = a + b + c;
             a = b;
