@@ -62,13 +62,18 @@ public class task3 {
     }
 
     public static ArrayList<String> salesData(String[][] all) {
-        int maxshops = 0;
-        for (String[] shop : all) {
-            if (shop.length > maxshops) {maxshops = shop.length;}
-        }
         ArrayList<String> products = new ArrayList<>();
+        int maxShops = 0;
         for (String[] shops : all) {
-            if (shops.length == maxshops) {products.add(shops[0]);}
+            if (shops.length > maxShops) {
+                maxShops = shops.length;
+            }
+        }
+        for (String[] shops : all) {
+            if (shops.length == maxShops) {
+                products.add(shops[0]);
+            }
+            if (shops.length == maxShops) {products.add(shops[0]);}
         }
         return products;
     }
