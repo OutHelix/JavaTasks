@@ -73,7 +73,6 @@ public class task3 {
             if (shops.length == maxShops) {
                 products.add(shops[0]);
             }
-            if (shops.length == maxShops) {products.add(shops[0]);}
         }
         return products;
     }
