@@ -140,7 +140,6 @@ public class task4 {
     public static String uniqueSubstring(String input) {
         String alphabet = "0123456789";
         String word = "";
-        loop:
         for (int x = 0; x <= input.length(); x++) {
             for (int y = x; y <= input.length(); y++) {
                 if (alphabet.contains(input.substring(x, y))) {
