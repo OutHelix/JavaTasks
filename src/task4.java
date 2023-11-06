@@ -2,210 +2,234 @@ import java.util.*;
 
 public class task4 {
     public static void main(String[] args) {
-        System.out.println("Task 4.0: " + nonRepeatable("abracadabra"));
-        System.out.println("Task 4.1: " + generateBrackets(2));
-        System.out.println("Task 4.2: ");
-        System.out.println("Task 4.3: " + alphabeticRow("abcdjuwx"));
-        System.out.println("Task 4.4: " + countSimb("aaabbcdd"));
-        System.out.println("Task 4.5: " + convertToNum("five hundred sixty seven"));
-        System.out.println("Task 4.6: " + uniqueSubstring("77897898"));
-        System.out.println("Task 4.7: " + shortestWay(new int[][]{{1, 3, 1}, {1, 5, 1}, {4, 2, 1}}));
-        System.out.println("Task 4.8: " + numericOrder("t3o the5m 1One all6 r4ule ri2ng"));
-        System.out.println("Task 4.9: " + switchNums(519, 723));
+        System.out.println(nonRepeatable("abracadabra"));
+        System.out.println(nonRepeatable("paparazzi"));
+        System.out.println(generateBrackets(1));
+        System.out.println(generateBrackets(2));
+        System.out.println(generateBrackets(3));
+        System.out.println(Arrays.toString(binarySystem(3)));
+        System.out.println(Arrays.toString(binarySystem(4)));
+        System.out.println(alhabeticRow("abcdjuwx"));
+        System.out.println(alhabeticRow("klmabzyxw"));
+        System.out.println(simbCounter("aaabbcdd"));
+        System.out.println(simbCounter("vvvvaajaaaaa"));
+        System.out.println(convertToNum("eight"));
+        System.out.println(convertToNum("five hundred sixty seven"));
+        System.out.println(convertToNum("thirty one"));
+        System.out.println(uniqueSubstring("123412324"));
+        System.out.println(uniqueSubstring("111111"));
+        System.out.println(uniqueSubstring("77897898"));
+        System.out.println(shortestWay(new int[][]{{1, 3, 1}, {1, 5, 1}, {4, 2, 1}}));
+        System.out.println(shortestWay(new int[][]{{2, 7, 3}, {1, 4, 8}, {4, 5, 9}}));
+        System.out.println(numericOrder("t3o the5m 1One all6 r4ule ri2ng"));
+        System.out.println(numericOrder("re6sponsibility Wit1h gr5eat power3 4comes g2reat"));
+        System.out.println(switchNums(519, 723));
+        System.out.println(switchNums(491, 3912));
+        System.out.println(switchNums(6274, 71259));
     }
-
-    //   --- 1
     public static String nonRepeatable(String str) {
-        if (str.length() <= 1) {
-            return str;
-        }
-
-        if (str.substring(1).contains(str.substring(0, 1))) {
-            return nonRepeatable(str.substring(1));
-        } else {
-
-            return str.charAt(0) + nonRepeatable(str.substring(1));
+        StringBuilder result = new StringBuilder();
+        Set<Object> charSet = new HashSet<>();
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (!charSet.contains(c)) {
+                result.append(c);
+                charSet.add(c);
         }
     }
-
-    //   --- 2
-    public static List<String> generateBrackets(int input) {
-        List<String> result = new ArrayList<>();
-        backtrack(result, "", 0, 0, input);
+        return result.toString();
+    }
+    public static List<String> generateBrackets(int n) {
+        List<String> result= new ArrayList<>();
+        backtrack(result, "", 0, 0, n);
         return result;
     }
-
     private static void backtrack(List<String> result, String current, int open, int close, int max) {
-        // Базовый случай: если длина текущей комбинации скобок достигла 2n, добавляем её в результат
         if (current.length() == 2 * max) {
             result.add(current);
             return;
         }
-
-        // Если количество открывающих скобок меньше n, можем добавить открывающую скобку
         if (open < max) {
             backtrack(result, current + "(", open + 1, close, max);
-
         }
-
-        // Если количество закрывающих скобок меньше количества открывающих, можем добавить закрывающую скобку
         if (close < open) {
-            backtrack(result, current + ")", open, close + 1, max);
+            backtrack(result,current + ")", open, close + 1, max);
         }
     }
-    //   --- 3
+    // 3
+    public static String[] binarySystem(int n) {
+        List<String> combinations = new ArrayList<>();
+        backtrack("", n, combinations);
+        String[] s = new String[combinations.size()];
+        int i = 0;
+        for (String el : combinations) {
+            s[i] = el;
+            i++;
+        }
+        return s;
+    }
+    public static void backtrack(String combination, int n, List<String> combinations) {
+        if (combination.length() == n) {
+            combinations.add(combination);
+        } else {
+// Проверяем, можно ли добавить 0 к текущей комбинации
+            if (!combination.endsWith("0")) {
+                backtrack(combination + "0", n, combinations);
+            }
+// Всегда можно добавить 1
+            backtrack(combination + "1", n, combinations);
+        }
+    }
 
+    //4
+    public static String alhabeticRow(String str) {
+        String result = "";
+        StringBuilder current = new StringBuilder();
 
-    //   --- 4
-    public static String alphabeticRow(String input) {
-        String alphabet = "abcdefghijklmnopqrstuvwxyz";
-        String max = "";
-        for (int x = 0; x <= input.length(); x++) {
-            for (int y = x; y <= input.length(); y++) {
-                if (alphabet.contains(input.substring(x, y)) || alphabet.toUpperCase().contains(input.substring(x, y))) {
-                    if (input.substring(x, y).length() > max.length()) {
-                        max = input.substring(x, y);
-                    }
+        for (int i = 0; i < str.length() - 1; i++) {
+            current.append(str.charAt(i));
+
+            if (str.charAt(i) > str.charAt(i + 1)) { //если текущий символ больше следующего
+                if (current.length() > result.length()) { // если длина текущей > результата
+                    result = current.toString();
                 }
+                current = new StringBuilder();
             }
         }
-        return max;
-    }
 
-    //   --- 5
-    public static String countSimb(String input) {
-        StringBuilder output = new StringBuilder();
-        Map<Character, Integer> simb = new HashMap<>();
-        for (int i = 0; i < input.length(); i++) {
-            char a = input.charAt(i);
-            simb.put(a, simb.getOrDefault(a, 0) + 1);
+        // добавляем последний символ строки
+        current.append(str.charAt(str.length() - 1));
+
+        // проверяем наибольшую последовательность
+        if (current.length() > result.length()) {
+            result = current.toString();
         }
-        List<Map.Entry<Character, Integer>> list = new ArrayList<>(simb.entrySet());
-        list.sort(Map.Entry.comparingByValue());
-        for (Map.Entry<Character, Integer> entry : list) {
-            output.append(entry.getKey()).append(entry.getValue());
-        }
-        return output.toString();
+
+        return result;
     }
+    public static String simbCounter(String str) {
+        StringBuilder result = new StringBuilder();
+        Map<Character, Integer> charCounts = new HashMap<>();
 
-    //   --- 6
-    public static Integer convertToNum(String input) {
-        Map<String, Integer> numbers = new HashMap<>();
-        numbers.put("one", 1);
-        numbers.put("two", 2);
-        numbers.put("three", 3);
-        numbers.put("four", 4);
-        numbers.put("five", 5);
-        numbers.put("six", 6);
-        numbers.put("seven", 7);
-        numbers.put("eight", 8);
-        numbers.put("nine", 9);
-        numbers.put("ten", 10);
-        numbers.put("eleven", 11);
-        numbers.put("twelve", 12);
-        numbers.put("thirteen", 13);
-        numbers.put("fourteen", 14);
-        numbers.put("fifteen", 15);
-        numbers.put("sixteen", 16);
-        numbers.put("seventeen", 17);
-        numbers.put("eighteen", 18);
-        numbers.put("nineteen", 19);
-        numbers.put("twenty", 20);
-        numbers.put("thirty", 30);
-        numbers.put("forty", 40);
-        numbers.put("fifty", 50);
-        numbers.put("sixty", 60);
-        numbers.put("seventy", 70);
-        numbers.put("eighty", 80);
-        numbers.put("ninety", 90);
-        numbers.put("hundred", 100);
-        numbers.put("thousand", 1000);
+        for (char c : str.toCharArray()) {
+            charCounts.put(c, charCounts.getOrDefault(c, 0) + 1); // добавляем в качестве ключа, значения увеличиваем на 1
+        }
 
-        String[] words = input.toLowerCase().split(" ");
-        int result = 0;
-        int tempResult = 0;
+        List<Map.Entry<Character, Integer>> sortedEntries = new ArrayList<>(charCounts.entrySet());
+        sortedEntries.sort(Map.Entry.comparingByValue());
+
+        for (Map.Entry<Character, Integer> entry : sortedEntries) {
+            result.append(entry.getKey());
+            result.append(entry.getValue());
+        }
+
+        return result.toString();
+    }
+    public static int convertToNum(String numberString) {
+        Map<String, Integer> numberMap = new HashMap<>();
+        numberMap.put("zero", 0);
+        numberMap.put("one", 1);
+        numberMap.put("two", 2);
+        numberMap.put("three", 3);
+        numberMap.put("four", 4);
+        numberMap.put("five", 5);
+        numberMap.put("six", 6);
+        numberMap.put("seven", 7);
+        numberMap.put("eight", 8);
+        numberMap.put("nine", 9);
+        numberMap.put("ten", 10);
+        numberMap.put("eleven", 11);
+        numberMap.put("twelve", 12);
+        numberMap.put("thirteen", 13);
+        numberMap.put("fourteen", 14);
+        numberMap.put("fifteen", 15);
+        numberMap.put("sixteen", 16);
+        numberMap.put("seventeen", 17);
+        numberMap.put("eighteen", 18);
+        numberMap.put("nineteen", 19);
+        numberMap.put("twenty", 20);
+        numberMap.put("thirty", 30);
+        numberMap.put("forty", 40);
+        numberMap.put("fifty", 50);
+        numberMap.put("sixty", 60);
+        numberMap.put("seventy", 70);
+        numberMap.put("eighty", 80);
+        numberMap.put("ninety", 90);
+        numberMap.put("hundred", 100);
+
+        String[] words = numberString.split(" ");
+        int current = 0;
+
         for (String word : words) {
-            int numberValue = numbers.get(word);
-
-            if (numberValue >= 100) {
-                tempResult *= numberValue;
+            int value = numberMap.get(word);
+            if (value == 100) {
+                current = current * value;
             } else {
-                tempResult += numberValue;
+                current += value;
             }
         }
-        return result + tempResult;
+        return current;
     }
-
-    //   --- 7
-    public static String uniqueSubstring(String input) {
-        String alphabet = "0123456789";
-        String word = "";
-        for (int x = 0; x <= input.length(); x++) {
-            for (int y = x; y <= input.length(); y++) {
-                if (alphabet.contains(input.substring(x, y))) {
-                    if (word.length() < input.substring(x, y).length()) {
-                        word = input.substring(x, y);
+    public static String uniqueSubstring(String num) {
+        String nums = "0123456789";
+        String result = "";
+        for (int x = 0; x <= num.length(); x++) {
+            for (int y = x; y <= num.length(); y++) {
+                if (nums.contains(num.substring(x, y))) {
+                    if (result.length() < num.substring(x, y).length()) {
+                        result = num.substring(x, y);
                     }
                 }
             }
         }
-        return word;
+        return result;
     }
-
-    //   --- 8
-    public static int shortestWay(int[][] input) {
-        int n = input.length;
-        int[][] output = new int[n][n];
-
-        output[0][0] = input[0][0];
-        for (int i = 1; i < n; i++) {
-            output[i][0] = output[i - 1][0] + input[i][0];
+    public static int shortestWay(int[][] matrix) {
+        int n = matrix.length; // Длина матрицы
+        int[][] result = new int[n][n]; // создаём матрицу с такой же длинной как и matrix
+        result[0][0] = matrix[0][0]; // присваиваем значения первого элемента матрицы к результату
+        for (int i = 1; i < n; i++) { //столбцы
+            result[i][0] = result[i - 1][0] + matrix[i][0];
         }
-        for (int j = 1; j < n; j++) {
-            output[0][j] = output[0][j - 1] + input[0][j];
+        for (int j = 1; j < n; j++) { // строки
+            result[0][j] = result[0][j - 1] + matrix[0][j];
         }
-
-        for (int i = 1; i < n; i++) {
-            for (int j = 1; j < n; j++) {
-                output[i][j] = Math.min(output[i - 1][j], output[i][j - 1]) + input[i][j];
+        for (int c = 1; c < n; c++) {
+            for (int k = 1; k < n; k++) {
+                result[c][k] = Math.min(result[c - 1][k], result[c][k - 1]) + matrix[c][k];
             }
         }
-
-        return output[n - 1][n - 1];
+        return result[n - 1][n - 1];
     }
-    //   --- 9
-    public static String numericOrder(String input) {
-        StringBuilder output = new StringBuilder();
-        String[] str = input.split(" ");
-        for (int i = 1; i <= str.length; i++) {
-            for (String word : str) {
+    public static String numericOrder(String str) {
+        StringBuilder result = new StringBuilder();
+        String[] string = str.split(" ");
+        for (int i = 1; i <= string.length; i++) {
+            for (String word : string) {
                 if (word.contains(String.valueOf(i))) {
-                    output.append(word.replaceAll("\\d", "")).append(" ");
+                    result.append(word.replaceAll("\\d", "")).append(" ");
                 }
             }
         }
-        return output.toString();
+        return result.toString();
     }
-    //   --- 10
-    public static int switchNums(int num1, int num2) {
-        char[] num1Char = String.valueOf(num1).toCharArray();
-        char[] num2Char = String.valueOf(num2).toCharArray();
+    public static int switchNums(int n1, int n2) {
+        char[] n1Char = String.valueOf(n1).toCharArray();
+        char[] n2Char = String.valueOf(n2).toCharArray();
 
-
-        Arrays.sort(num1Char);
-        char[] new1Char = new char[num1Char.length];
-        for (int i = 0; i < num1Char.length; i++) {
-            new1Char[num1Char.length - 1 - i] = num1Char[i];
+        Arrays.sort(n1Char);
+        char[] newChar = new char[n1Char.length];
+        for (int i = 0; i < n1Char.length; i++) {
+            newChar[n1Char.length - 1 - i] = n1Char[i];
         }
-
-        for (char c : new1Char) {
-            for (int y = 0; y < num2Char.length; y++) {
-                if (c > num2Char[y]) {
-                    num2Char[y] = c;
+        for (char j : newChar) {
+            for (int c = 0; c < n2Char.length; c++) { //для каждого символа j в newChar ищем первую позицию в массиве n2Char, в которой символ меньше j, и заменяет этот символ в n2Char на j
+                if (j > n2Char[c]) {
+                    n2Char[c] = j;
                     break;
                 }
             }
         }
-        return Integer.parseInt(String.valueOf(num2Char));
+        return Integer.parseInt(String.valueOf(n2Char));
     }
 }
