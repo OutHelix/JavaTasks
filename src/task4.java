@@ -2,31 +2,22 @@ import java.util.*;
 
 public class task4 {
     public static void main(String[] args) {
-        System.out.println(nonRepeatable("abracadabra"));
-        System.out.println(nonRepeatable("paparazzi"));
-        System.out.println(generateBrackets(1));
-        System.out.println(generateBrackets(2));
-        System.out.println(generateBrackets(3));
-        System.out.println(Arrays.toString(binarySystem(3)));
-        System.out.println(Arrays.toString(binarySystem(4)));
-        System.out.println(alhabeticRow("abcdjuwx"));
-        System.out.println(alhabeticRow("klmabzyxw"));
-        System.out.println(simbCounter("aaabbcdd"));
-        System.out.println(simbCounter("vvvvaajaaaaa"));
-        System.out.println(convertToNum("eight"));
-        System.out.println(convertToNum("five hundred sixty seven"));
-        System.out.println(convertToNum("thirty one"));
-        System.out.println(uniqueSubstring("123412324"));
-        System.out.println(uniqueSubstring("111111"));
-        System.out.println(uniqueSubstring("77897898"));
-        System.out.println(shortestWay(new int[][]{{1, 3, 1}, {1, 5, 1}, {4, 2, 1}}));
-        System.out.println(shortestWay(new int[][]{{2, 7, 3}, {1, 4, 8}, {4, 5, 9}}));
-        System.out.println(numericOrder("t3o the5m 1One all6 r4ule ri2ng"));
-        System.out.println(numericOrder("re6sponsibility Wit1h gr5eat power3 4comes g2reat"));
-        System.out.println(switchNums(519, 723));
-        System.out.println(switchNums(491, 3912));
-        System.out.println(switchNums(6274, 71259));
+        System.out.println("Task 4.0: " + nonRepeatable("abracadabra"));
+        System.out.println("Task 4.1: " + generateBrackets(3));
+        System.out.println("Task 4.2: " + binarySystem(3));
+        System.out.println("Task 4.3: " + alhabeticRow("abcdjuwx"));
+        System.out.println("Task 4.4: " + simbCounter("aaabbcdd"));
+        System.out.println("Task 4.5: " + convertToNum("eight"));
+        System.out.println("Task 4.6: " + uniqueSubstring("123412324"));
+        System.out.println("Task 4.7: " + shortestWay(new int[][]{{1, 3, 1}, {1, 5, 1}, {4, 2, 1}}));
+        System.out.println("Task 4.8: " + numericOrder("t3o the5m 1One all6 r4ule ri2ng"));
+        System.out.println("Task 4.9: " + switchNums(519, 723));
     }
+
+    /**  --1--
+     * Рекурсивная функция, которая удаляет повторяющиеся символы из переданной строки.
+     * Возвращает строку, в которой каждый символ встречается только один раз.
+     */
     public static String nonRepeatable(String str) {
         StringBuilder result = new StringBuilder();
         Set<Object> charSet = new HashSet<>();
@@ -39,11 +30,21 @@ public class task4 {
     }
         return result.toString();
     }
+
+    /**  --2--
+     * Функция, которая генерирует все возможные правильные комбинации пар скобок для заданного числа n.
+     * Возвращает список строк с комбинациями скобок.
+     */
     public static List<String> generateBrackets(int n) {
         List<String> result= new ArrayList<>();
         backtrack(result, "", 0, 0, n);
         return result;
     }
+
+    /**  --2.5--
+     * Вспомогательная рекурсивная функция для генерации комбинаций скобок.
+     * Добавляет правильные комбинации в список result.
+     */
     private static void backtrack(List<String> result, String current, int open, int close, int max) {
         if (current.length() == 2 * max) {
             result.add(current);
@@ -56,32 +57,37 @@ public class task4 {
             backtrack(result,current + ")", open, close + 1, max);
         }
     }
-    // 3
-    public static String[] binarySystem(int n) {
+
+    /**  --3--
+     * Функция, которая генерирует все возможные бинарные комбинации длины n,
+     * в которых не может быть соседствующих нулей.
+     * Возвращает строку с бинарными комбинациями.
+     */
+    public static String binarySystem(int n) {
         List<String> combinations = new ArrayList<>();
         backtrack("", n, combinations);
-        String[] s = new String[combinations.size()];
-        int i = 0;
-        for (String el : combinations) {
-            s[i] = el;
-            i++;
-        }
-        return s;
+        return Arrays.toString(combinations.toArray());
     }
+
+    /**  --3.5--
+     * Вспомогательная рекурсивная функция для генерации бинарных комбинаций.
+     * Добавляет комбинации в список combinations.
+     */
     public static void backtrack(String combination, int n, List<String> combinations) {
         if (combination.length() == n) {
             combinations.add(combination);
         } else {
-// Проверяем, можно ли добавить 0 к текущей комбинации
             if (!combination.endsWith("0")) {
                 backtrack(combination + "0", n, combinations);
             }
-// Всегда можно добавить 1
             backtrack(combination + "1", n, combinations);
         }
     }
 
-    //4
+    /** --4--
+     * Функция, которая принимает строку и возвращает длину самого длинного последовательного ряда
+     * в этой строке. Возвращает самый длинный последовательный ряд в виде строки.
+     */
     public static String alhabeticRow(String str) {
         String result = "";
         StringBuilder current = new StringBuilder();
@@ -107,6 +113,11 @@ public class task4 {
 
         return result;
     }
+
+    /** --5--
+     * Функция, которая принимает строку и подсчитывает количество идущих подряд символов,
+     * заменяя соответствующим числом повторяющиеся символы.
+     */
     public static String simbCounter(String str) {
         StringBuilder result = new StringBuilder();
         Map<Character, Integer> charCounts = new HashMap<>();
@@ -125,6 +136,11 @@ public class task4 {
 
         return result.toString();
     }
+
+    /** --6--
+     * Функция, принимающая положительное целое число в строковом формате,
+     * не превышающее 1000, и возвращающую его целочисленное представление.
+     */
     public static int convertToNum(String numberString) {
         Map<String, Integer> numberMap = new HashMap<>();
         numberMap.put("zero", 0);
@@ -170,6 +186,11 @@ public class task4 {
         }
         return current;
     }
+
+    /** --7--
+     * Функция, принимающая строку цифр, выполняющую поиск
+     * подстроки максимальной длины с уникальными элементами.
+     */
     public static String uniqueSubstring(String num) {
         String nums = "0123456789";
         String result = "";
@@ -184,6 +205,10 @@ public class task4 {
         }
         return result;
     }
+
+    /** --8--
+     * Функция - поисковик наименьшего матричного пути.
+     */
     public static int shortestWay(int[][] matrix) {
         int n = matrix.length; // Длина матрицы
         int[][] result = new int[n][n]; // создаём матрицу с такой же длинной как и matrix
@@ -201,6 +226,11 @@ public class task4 {
         }
         return result[n - 1][n - 1];
     }
+
+    /** --9--
+     * Функция, принимающая строку, содержащую числа внутри слов.
+     * Эти числа представляют расположение слова для новой строящейся строки.
+     */
     public static String numericOrder(String str) {
         StringBuilder result = new StringBuilder();
         String[] string = str.split(" ");
@@ -213,6 +243,11 @@ public class task4 {
         }
         return result.toString();
     }
+
+    /** --10--
+     * Функция, принимающая два числа, которая делает второе число
+     * максимально возможным за счет замены своих элементов элементами первого числа.
+     */
     public static int switchNums(int n1, int n2) {
         char[] n1Char = String.valueOf(n1).toCharArray();
         char[] n2Char = String.valueOf(n2).toCharArray();
