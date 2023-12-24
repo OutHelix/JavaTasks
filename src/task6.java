@@ -48,15 +48,17 @@ public class task6 {
     // -- 1 --
 
     public static String hiddenAnagram(String a, String b) {
-        a = a.toLowerCase().replaceAll("[^a-z]", "");
-        b = b.toLowerCase().replaceAll("[^a-z]", "");
-        int[] setB = new int[26];
-        for (char c : b.toCharArray()) setB[c - 97]++;
+        a = a.toLowerCase().replaceAll("[^a-z]", "");       // приводят строки a и b к нижнему регистру и удаляют все символы, которые не являются буквами алфавита.
+        b = b.toLowerCase().replaceAll("[^a-z]", "");       // Таким образом, мы убираем пробелы, знаки препинания и прочие символы, оставляя только буквы.
+
+        int[] setB = new int[26]; // 26 букв
+        for (char c : b.toCharArray()) setB[c - 97]++; // проходимся по массиву и увеличиваем значение для соотв буквы
 
         for (int i = 0; i <= a.length() - b.length(); i++) {
             int[] setA = new int[26];
-            for (char c : a.substring(i, i + b.length()).toCharArray()) setA[c - 97]++;
-            if (Arrays.equals(setA, setB)) {
+            // для хранения букв в подстроке a текущей длины, равной длине строки b.
+            for (char c : a.substring(i, i + b.length()).toCharArray()) setA[c - 97]++; // заполняет временный массив setA для текущей подстроки a
+            if (Arrays.equals(setA, setB)) { // если массивы равны возвращаем подстроку
                 return a.substring(i, i + b.length());
             }
         }
@@ -71,7 +73,7 @@ public class task6 {
         } else {
             List<String> list = new ArrayList<>();
             list.add(str.substring(0, n));
-            list.addAll(collect(str.substring(n), n));
+            list.addAll(collect(str.substring(n), n)); //рекурсивно добавляем
             return list.stream().sorted().collect(Collectors.toList());
         }
     }
@@ -79,22 +81,23 @@ public class task6 {
     // -- 3 --
 
     public static String nicoCipher(String message, String key) {
-        int keyLength = key.length();
-        int extraSpaces = (keyLength - (message.length() % keyLength)) % keyLength;
-        message += new String(new char[extraSpaces]).replace("\0", " ");
+        int keyLength = key.length(); //длина ключа
+        int extraSpaces = (keyLength - (message.length() % keyLength)) % keyLength; // вычисляет количество дополнительных пробелов, которые необходимо добавить к сообщению
+
+        message += new String(new char[extraSpaces]).replace("\0", " "); // добавляем дополнительные пробелы к сообщению.
 
         Integer[] order = new Integer[keyLength];
-        for (int i = 0; i < keyLength; i++) {
+        for (int i = 0; i < keyLength; i++) { // заполняем массив
             order[i] = i;
         }
 
-        Arrays.sort(order, (a, b) -> Character.compare(key.charAt(a), key.charAt(b)));
+        Arrays.sort(order, (a, b) -> Character.compare(key.charAt(a), key.charAt(b))); // сортируем порядок столбцов
 
         char[] result = new char[message.length()];
-        for (int i = 0; i < message.length(); i++) {
-            int columnIndex = order[i % keyLength];
-            int rowIndex = i / keyLength;
-            result[i] = message.charAt(rowIndex * keyLength + columnIndex);
+        for (int i = 0; i < message.length(); i++) { // проходемся по всем символам
+            int columnIndex = order[i % keyLength]; // индекс столбца
+            int rowIndex = i / keyLength; // индекс строки
+            result[i] = message.charAt(rowIndex * keyLength + columnIndex); // записываем символ
         }
 
         return new String(result);
@@ -105,36 +108,39 @@ public class task6 {
     public static int[] twoProduct(int[] arr, int n) {
         HashSet<Integer> set = new HashSet<>();
         for (int m : arr) {
-            int target = n / m;
-            if (n % m == 0 && set.contains(target))
-                return new int[] { target, m };
-            set.add(m);
+            int target = n / m; // Вычисляем второе число, которое нужно для произведения n
+            if (n % m == 0 && set.contains(target)) // Проверяем, делится ли n на текущее число m и существует ли в HashSet числовая пара для произведения n
+                return new int[] { target, m }; // Если да, возвращаем числовую пару
+            set.add(m); // Добавляем текущее число m в HashSet
         }
-        return new int[] {};
+        return new int[] {}; // Если не найдено соответствующей пары, возвращаем пустой массив
     }
 
     // -- 5 --
 
     public static int[] isExact(int f, int m, int n) {
         return (f < n) ? isExact(f * (m + 1), m + 1, n) : new int[] { f, m };
+        // Если текущее значение факториала f меньше n, функция вызывает саму себя с увеличенными значениями f и m + 1, чтобы продолжить увеличивать факториал.
     }
 
     public static int[] isExact(int n) {
         int[] res = isExact(1, 1, n);
         return (res[0] == n) ? res : new int[] {};
+        // Равен ли рассчитанный факториал res[0] числу n? Если да, возвращает массив из значений факториала и m, иначе возвращает пустой массив {}.
     }
 
     // -- 6 --
 
     public static String fractions(String frac) {
-        int startBracket = frac.indexOf('(');
-        if (startBracket != -1) {
-            String repeating = frac.substring(startBracket + 1, frac.length() - 1);
-            frac = frac.substring(0, startBracket) + repeating.repeat(9 - repeating.length());
+        int startBracket = frac.indexOf('('); // определяет индекс открывающей скобки
+        if (startBracket != -1) {  // если есть скоба
+            String repeating = frac.substring(startBracket + 1, frac.length() - 1); // извлекает повторяющуюся часть дроби из скобок
+            frac = frac.substring(0, startBracket) + repeating.repeat(9 - repeating.length()); // продлевает до 9
         }
-        double a = Double.parseDouble(frac);
+        double a = Double.parseDouble(frac); // преобразуем строку в число с плав точкой
         int div = 2;
         while (Math.ceil(a * div) - a * div > 0.000001) div++;
+        // выполняет цикл, чтобы найти знаменатель дроби, увеличивая делитель div до тех пор, пока разница между округленным значением не будет меньше 0.000001.
         return (int) Math.ceil(a * div) + "/" + div;
     }
 
@@ -142,17 +148,19 @@ public class task6 {
 
     public static String pilish_string(String str) {
         String res = "";
-        String pi = String.valueOf(Math.PI).replace(".", "");
+        String pi = String.valueOf(Math.PI).replace(".", ""); // строка с пи
         int piIndex = 0, strIndex = 0;
 
         while (strIndex < str.length()) {
-            int p = pi.charAt(piIndex++) - '0';
+            int p = pi.charAt(piIndex++) - '0'; // извлекаю цифру
             int n = Math.min(p, str.length() - strIndex);
-            res += str.substring(strIndex, strIndex + n);
-            strIndex += n;
-            if (strIndex < str.length()) res += ' ';
+            // Определяет длину текущего слова, которое будет добавлено к результату. Это минимум между текущей цифрой числа Пи и оставшейся длиной входной строки.
+            res += str.substring(strIndex, strIndex + n); // добавляет к результату слово, взятое из входной строки, соответствующее текущей цифре числа Пи.
+            strIndex += n; // увеличиваем индекс входной строки
+            if (strIndex < str.length()) res += ' '; // доавляем пробел
             else
                 while (n++ < p) res += res.charAt(res.length() - 1);
+                // если длина текущего слова меньше, чем соответствующая цифра числа Пи, повторяет последний символ слова, чтобы сделать его равным требуемой длине.
         }
         return res;
     }
@@ -160,112 +168,134 @@ public class task6 {
     // -- 8 --
 
     public static String generateNonconsecutive(String str) {
+        // Регулярное выражение для сопоставления операторов и операндов
         Pattern part = Pattern.compile("^( [\\-+*/] )*(\\()*(-*\\d+)(\\))*");
         boolean start = true;
-        Node currentNode = new Node("+");
-        currentNode.setLeft(new Node("0"));
-        int parLevel = 0;
+        Node currentNode = new Node("+"); // Создание корневого узла с оператором "+"
+        currentNode.setLeft(new Node("0")); // Установка левого узла с операндом "0"
+        int parLevel = 0; // Переменная для отслеживания уровня скобок
 
         for (int i = 0; i < str.length();) {
-            Matcher matcher = part.matcher(str).region(i, str.length());
+            Matcher matcher = part.matcher(str).region(i, str.length()); // Создание Matcher для текущей подстроки
 
-            if (!matcher.find()){
+            // Если не найдено совпадение с регулярным выражением, выход с ошибкой синтаксиса
+            if (!matcher.find()) {
                 System.out.println("Syntax error");
                 return null;
             }
 
-            if (matcher.group(1) == null){
-                if (!start){
+            // Проверка наличия оператора в текущем сопоставлении
+            if (matcher.group(1) == null) {
+                // Если это не начальное сопоставление, выход с ошибкой синтаксиса
+                if (!start) {
                     System.out.println("Syntax error");
                     return null;
                 }
+                // Установка правого узла текущего узла с числом из сопоставления
                 currentNode.setRight(new Node(matcher.group(3)));
                 start = false;
                 i = matcher.end();
-                if (!(matcher.group(2) == null)){
+                // Увеличение уровня скобок, если есть открывающая скобка
+                if (!(matcher.group(2) == null)) {
                     parLevel++;
                 }
                 continue;
             }
-            Node opNode = new Node(String.valueOf(matcher.group(1).charAt(1)));
-            Node numNode = new Node(matcher.group(3));
-            opNode.setRight(numNode);
-            if (parLevel > 0){
-                if (matcher.group(1).charAt(1) == '*' || matcher.group(1).charAt(1) == '/'){
+
+            Node opNode = new Node(String.valueOf(matcher.group(1).charAt(1))); // Создание узла оператора
+            Node numNode = new Node(matcher.group(3)); // Создание узла операнда
+            opNode.setRight(numNode); // Установка правого узла для оператора
+
+            // Обработка операций с учетом уровня скобок
+            if (parLevel > 0) {
+                if (matcher.group(1).charAt(1) == '*' || matcher.group(1).charAt(1) == '/') {
                     opNode.setLeft(currentNode.right);
                     currentNode.setRight(opNode);
-                }
-                else {
+                } else {
                     opNode.setLeft(currentNode.right);
                     currentNode.setRight(opNode);
                     currentNode = opNode;
                 }
             }
-            if (parLevel == 0){
-                if (matcher.group(1).charAt(1) == '*' || matcher.group(1).charAt(1) == '/'){
+            if (parLevel == 0) {
+                if (matcher.group(1).charAt(1) == '*' || matcher.group(1).charAt(1) == '/') {
                     opNode.setLeft(currentNode.right);
-
                     currentNode.setRight(opNode);
-                }
-                else {
+                } else {
                     opNode.setLeft(currentNode);
                     currentNode = opNode;
                 }
             }
 
-            if (!(matcher.group(2) == null)){
+            // Увеличение уровня скобок, если есть открывающая скобка
+            if (!(matcher.group(2) == null)) {
                 currentNode = opNode;
                 parLevel++;
             }
-            if (!(matcher.group(4) == null)){
-                if (!(currentNode.root == null)){
+            // Уменьшение уровня скобок, если есть закрывающая скобка
+            if (!(matcher.group(4) == null)) {
+                if (!(currentNode.root == null)) {
                     currentNode = currentNode.root;
                 }
                 parLevel--;
             }
-            i = matcher.end();
+            i = matcher.end(); // Перемещение к следующему сопоставлению
         }
+
         try {
+            // Вычисление значения корневого узла
             double res = currentNode.getUltimateRoot().computeNode();
-            if (res % 1 == 0){
+            // Возврат значения, округленного до целого числа, если оно целое
+            if (res % 1 == 0) {
                 return String.valueOf((int) res);
             }
-            return String.valueOf(res);
+            return String.valueOf(res); // Возврат значения с плавающей точкой
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage()); // Обработка и вывод сообщения об ошибке
             return null;
         }
     }
+
+    // Класс Node для представления узлов в дереве выражения
     static class Node {
+        // Поля класса Node
         String value;
         Node left;
         Node root;
         Node right;
 
+        // Методы класса Node
 
-        public void setLeft(Node node){
+        // Установка левого узла и установка текущего узла в качестве его родителя
+        public void setLeft(Node node) {
             this.left = node;
             node.root = this;
         }
 
-        public void setRight(Node node){
+        // Установка правого узла и установка текущего узла в качестве его родителя
+        public void setRight(Node node) {
             this.right = node;
             node.root = this;
         }
 
-        public Node getUltimateRoot(){
-            if (root != null){
+        // Получение конечного корневого узла для текущего узла
+        public Node getUltimateRoot() {
+            if (root != null) {
                 return root.getUltimateRoot();
             }
             return this;
         }
 
+        // Вычисление значения узла (рекурсивно)
         public double computeNode() throws Exception {
-            if ("+-*/".contains(value)){
+            // Если узел содержит оператор (+, -, *, /)
+            if ("+-*/".contains(value)) {
+                // Вычисление значения для левого и правого поддеревьев
                 double num1 = left.computeNode();
                 double num2 = right.computeNode();
 
-                switch (value){
+                // Выполнение операции в соответствии с оператором
+                switch (value) {
                     case "+":
                         return num1 + num2;
                     case "-":
@@ -273,79 +303,85 @@ public class task6 {
                     case "*":
                         return num1 * num2;
                     case "/":
-                        if (num2 == 0){
+                        // Обработка деления на ноль
+                        if (num2 == 0) {
                             throw new ArithmeticException("Division by zero");
                         }
                         return num1 / num2;
                     default:
                         throw new Exception("Syntax error");
                 }
-
             }
+            // Если узел содержит число, преобразовать его и вернуть
             return Double.parseDouble(value);
         }
 
+        // Конструктор класса Node
         Node(String value) {
             this.value = value;
             this.root = null;
-            right = null;
-            left = null;
+            this.right = null;
+            this.left = null;
         }
     }
+
 
 
     // -- 9 --
 
     public static String isValid(String str) {
-        int[] charCounts = new int[26];
+        int[] charCounts = new int[26]; // Создание массива для подсчета частоты символов
         for (char c : str.toCharArray()) {
-            charCounts[c - 'a']++;
+            charCounts[c - 'a']++; // Увеличение счетчика для символа c | код a = 97
         }
-        int prevCount = -1;
-        int removals = 0;
+        int prevCount = -1; // Предыдущее количество встреч символов
+        int removals = 0; // Количество символов, которые необходимо удалить
         for (int count : charCounts) {
             if (count > 0) {
                 if (prevCount == -1) {
-                    prevCount = count;
+                    prevCount = count; // Инициализация prevCount, если еще не инициализирован
                 } else if (prevCount != count) {
-                    removals += Math.abs(prevCount - count);
-                    if (removals > 1) return "NO";
+                    removals += Math.abs(prevCount - count); // Подсчет несоответствий частот символов
+                    if (removals > 1) return "NO"; // Если необходимо удалить более одного символа, возвращается "NO"
                 }
             }
         }
-        return "YES";
+        return "YES"; // Если строка удовлетворяет условиям, возвращается "YES"
     }
 
     // -- 10 --
 
     public static String findLCS(String s1, String s2) {
-        int[][] dp = new int[s1.length() + 1][s2.length() + 1];
-        StringBuilder lcs = new StringBuilder();
+        int[][] dp = new int[s1.length() + 1][s2.length() + 1]; // Создание массива для хранения длин LCS
+        StringBuilder lcs = new StringBuilder(); // Создание объекта StringBuilder для хранения LCS
 
+        // Начало заполнения массива dp для поиска LCS
         for (int i = 1; i <= s1.length(); i++) {
             for (int j = 1; j <= s2.length(); j++) {
                 if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
-                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                    dp[i][j] = dp[i - 1][j - 1] + 1; // Если символы равны, увеличиваем длину LCS
                 } else {
-                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]); // Иначе выбираем максимальное значение из двух предыдущих
                 }
             }
         }
+        // Конец заполнения массива dp
 
         int i = s1.length(), j = s2.length();
 
+        // Нахождение самой длинной общей подпоследовательности
         while (i > 0 && j > 0) {
             if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
-                lcs.append(s1.charAt(i - 1));
+                lcs.append(s1.charAt(i - 1)); // Если символы совпадают, добавляем его в LCS
                 i--;
                 j--;
             } else if (dp[i - 1][j] > dp[i][j - 1]) {
-                i--;
+                i--; // Иначе двигаемся к ячейке с более большим значением в массиве dp
             } else {
                 j--;
             }
         }
 
-        return lcs.reverse().toString();
+        return lcs.reverse().toString(); // Возвращаем LCS в обратном порядке (так как мы добавляли символы в конец)
     }
 }
