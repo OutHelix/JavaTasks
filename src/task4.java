@@ -24,22 +24,24 @@ public class task4 {
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
             if (!charSet.contains(c)) {
-                result.append(c);
-                charSet.add(c);
+                result.append(c); // Добавляет уникальный символ в результат
+                charSet.add(c); // Добавляет символ в HashSet, чтобы помнить о его появлении
+            }
         }
+        return result.toString(); // Возвращает строку с уникальными символами
     }
-        return result.toString();
-    }
+
 
     /**  --2--
      * Функция, которая генерирует все возможные правильные комбинации пар скобок для заданного числа n.
      * Возвращает список строк с комбинациями скобок.
      */
     public static List<String> generateBrackets(int n) {
-        List<String> result= new ArrayList<>();
-        backtrack(result, "", 0, 0, n);
+        List<String> result = new ArrayList<>();
+        backtrack(result, "", 0, 0, n); // Вызов вспомогательной функции backtrack для генерации комбинаций скобок
         return result;
     }
+
 
     /**  --2.5--
      * Вспомогательная рекурсивная функция для генерации комбинаций скобок.
@@ -47,16 +49,17 @@ public class task4 {
      */
     private static void backtrack(List<String> result, String current, int open, int close, int max) {
         if (current.length() == 2 * max) {
-            result.add(current);
+            result.add(current); // Добавляет комбинацию скобок в список, если достигнута нужная длина
             return;
         }
         if (open < max) {
-            backtrack(result, current + "(", open + 1, close, max);
+            backtrack(result, current + "(", open + 1, close, max); // Рекурсивный вызов для добавления открывающей скобки
         }
         if (close < open) {
-            backtrack(result,current + ")", open, close + 1, max);
+            backtrack(result, current + ")", open, close + 1, max); // Рекурсивный вызов для добавления закрывающей скобки
         }
     }
+
 
     /**  --3--
      * Функция, которая генерирует все возможные бинарные комбинации длины n,
@@ -65,9 +68,10 @@ public class task4 {
      */
     public static String binarySystem(int n) {
         List<String> combinations = new ArrayList<>();
-        backtrack("", n, combinations);
-        return Arrays.toString(combinations.toArray());
+        backtrack("", n, combinations); // Генерирует бинарные комбинации и добавляет их в список
+        return Arrays.toString(combinations.toArray()); // Возвращает строковое представление массива комбинаций
     }
+
 
     /**  --3.5--
      * Вспомогательная рекурсивная функция для генерации бинарных комбинаций.
@@ -75,14 +79,15 @@ public class task4 {
      */
     public static void backtrack(String combination, int n, List<String> combinations) {
         if (combination.length() == n) {
-            combinations.add(combination);
+            combinations.add(combination); // Добавляет комбинацию в список, если достигнута нужная длина
         } else {
             if (!combination.endsWith("0")) {
-                backtrack(combination + "0", n, combinations);
+                backtrack(combination + "0", n, combinations); // Рекурсивный вызов для добавления "0", если предыдущий символ не "0"
             }
-            backtrack(combination + "1", n, combinations);
+            backtrack(combination + "1", n, combinations); // Рекурсивный вызов для добавления "1"
         }
     }
+
 
     /** --4--
      * Функция, которая принимает строку и возвращает длину самого длинного последовательного ряда

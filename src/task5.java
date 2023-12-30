@@ -21,43 +21,49 @@ public class task5 {
         System.out.println("Task 5.9: " + isNew(123));
     }
 
-    /* Метод sameLetterPattern(String s1, String s2) определяет, являются ли две строки s1 и s2 строками, в которых
-    повторяется одна и та же буква в одном и том же порядке. Он использует хэш-карты для отслеживания соответствия
-     символов в обеих строках.
+    /* Функция sameLetterPattern(String s1, String s2) определяет, имеют ли две строки s1 и s2 о
+    динаковые последовательности букв в одном и том же порядке. Она использует хэш-карты для
+    отслеживания соответствия символов в обеих строках.
      */
+
     // -- 1 --
-    public static boolean sameLetterPattern(String s1, String s2)
-    {
-        if(s1.length() != s2.length()) { //если длина строки s1 не равна длине строки s2, то возвращает false.
+    public static boolean sameLetterPattern(String s1, String s2) {
+        // Если длина строки s1 не равна длине строки s2, возвращается значение false.
+        if (s1.length() != s2.length()) {
             return false;
         }
-        //HashMap - s1map и s2map, которые будут хранить символы строки s1 и s2 в качестве ключей и их индексы в качестве значений.
+        // Создаются хэш-карты s1map и s2map для хранения символов из строк s1 и s2 в качестве ключей и их индексов в качестве значений.
         HashMap<Character, Integer> s1map = new HashMap<>();
         HashMap<Character, Integer> s2map = new HashMap<>();
 
-        for(int i = 0; i < s1.length(); i++) {
-            //если значение с символом из строки s в smap не равно значению с символом из строки s2 в s2map, то метод возвращает false.
-            if(s1map.get(s1.charAt(i)) != s2map.get(s2.charAt(i))) return false;
-            s1map.put(s1.charAt(i), i);//если совпадают
+        for (int i = 0; i < s1.length(); i++) {
+            // Если значение символа из строки s1 в s1map не равно значению символа из строки s2 в s2map, возвращается значение false.
+            if (s1map.get(s1.charAt(i)) != s2map.get(s2.charAt(i))) {
+                return false;
+            }
+            // Присваиваются значения символов из строк s1 и s2 в соответствующие хэш-карты.
+            s1map.put(s1.charAt(i), i);
             s2map.put(s2.charAt(i), i);
         }
+        // Если ни одно из условий не нарушено, возвращается значение true.
         return true;
     }
 
-    /* Метод spiderVsFly(String spider, String fly) определяет кратчайший путь паука на паутине к мухе.
-    Паук и муха представлены в виде строк с символами, представляющими радиальное расположение (от A до H) и
-    радиальное кольцо. Метод использует циклы и условные операторы для определения пути паука.
-     */
 
-    // Метод для получения следующей радиали в часовой стрелке
+    /* Метод spiderVsFly(String spider, String fly) определяет кратчайший путь паука по паутине к мухе.
+   Паук и муха представлены строками с символами, обозначающими радиальное положение (от A до H) и кольцо.
+   Метод использует циклы и условные операторы для определения пути паука.
+*/
+
+    // Метод для получения следующей радиали по часовой стрелке
     static char getNextRadial(char radial) {
-        if (radial == 'H') return 'A'; // Если радиаль H, то следующая - A
+        if (radial == 'H') return 'A'; // Если радиаль H, следующая - A
         return (char) (radial + 1); // Иначе, возвращаем следующую радиаль
     }
 
-    // Метод для получения предыдущей радиали в часовой стрелке
+    // Метод для получения предыдущей радиали по часовой стрелке
     static char getPrevRadial(char radial) {
-        if (radial == 'A') return 'H'; // Если радиал A, то предыдущая - H
+        if (radial == 'A') return 'H'; // Если радиал A, предыдущая - H
         return (char) (radial - 1); // Иначе, возвращаем предыдущую радиаль
     }
 
@@ -66,16 +72,16 @@ public class task5 {
     static String spiderVsFly(String spider, String fly) {
         char spiderRing = spider.charAt(1); // Кольцо, на котором находится паук
         char flyRing = fly.charAt(1); // Кольцо, на котором находится муха
-        char spiderRadial = spider.charAt(0); // Радиал, на которой находится паук
-        char flyRadial = fly.charAt(0); // Радиал, на которой находится муха
+        char spiderRadial = spider.charAt(0); // Радиаль, на которой находится паук
+        char flyRadial = fly.charAt(0); // Радиаль, на которой находится муха
 
         int ringDifference = Math.abs(spiderRing - flyRing); // Разница между кольцами
         ArrayList<String> path = new ArrayList<>(); // Создание списка для хранения пути
 
-        // Добавление пути по радиалам до того же кольца, что у мухи
+        // Добавление пути по радиалям до того же кольца, что у мухи
         for (int i = 0; i < ringDifference; i++) {
             if (spiderRing < flyRing) {
-                path.add(spiderRadial + "" + spiderRing); // Добавляем путь по радиалам до кольца мухи
+                path.add(spiderRadial + "" + spiderRing); // Добавляем путь по радиалям до кольца мухи
                 spiderRing++; // Переходим к следующему кольцу
             } else {
                 path.add(spiderRadial + "" + spiderRing); // Добавляем путь по радиалям до кольца мухи
@@ -83,7 +89,7 @@ public class task5 {
             }
         }
 
-            // Добавление пути по радиалям до радиали мухи
+        // Добавление пути по радиалям до радиали мухи
         while (spiderRadial != flyRadial) {
             if (spiderRadial < flyRadial) {
                 path.add(spiderRadial + "" + spiderRing); // Добавляем путь по радиалям до радиали мухи
@@ -94,7 +100,7 @@ public class task5 {
             }
         }
 
-            // Добавление пути от паука до мухи на одной радиали
+        // Добавление пути от паука до мухи на одной радиали
         while (spiderRing != flyRing) {
             if (spiderRing < flyRing) {
                 path.add(spiderRadial + "" + spiderRing); // Добавляем путь от паука до мухи на одной радиали
@@ -111,135 +117,142 @@ public class task5 {
     }
     //2
 
-    /* Метод digitsCount(long number) рекурсивно определяет количество цифр в заданном числе. Он использует деление
-    числа на 10 до тех пор, пока число не станет равным 0, и считает количество рекурсивных вызовов.
+    /* Метод digitsCount(long number) используется рекурсивно для определения количества цифр в заданном числе.
+    Он осуществляет деление числа на 10 до тех пор, пока число не достигнет значения 0, и подсчитывает количество
+    рекурсивных вызовов.
      */
     // -- 3 --
     public static int digitsCount(long num) {
         if (num < 10) {
-            return 1;
+            return 1; // Если число меньше 10, возвращается 1, что означает наличие одной цифры
         }
-        return 1 + digitsCount(num / 10);
+        return 1 + digitsCount(num / 10); // Иначе добавляется 1 и вызывается рекурсивно для числа, поделенного на 10
     }
 
-    /* Метод totalPoints(String[] arr, String word) вычисляет общее количество очков, которые можно набрать из
-    списка слов arr с использованием заданного слова word. Каждая буква в слове arr оценивается определенным
-    количеством очков, которое зависит от длины слова и уникальности букв в слове.
+
+    /* Метод totalPoints(String[] arr, String word) вычисляет общее количество очков, которые можно набрать из списка
+    слов arr, используя заданное слово word. Каждая буква в слове arr оценивается определенным количеством очков,
+    зависящим от длины слова и уникальности букв в слове.
      */
     // -- 4 --
     public static int totalPoints(String[] arr, String word) {
-        int res = 0;
+        int res = 0; // Инициализируем переменную для хранения общего количества очков
         for (int i = 0; i < arr.length; i++) {
-            int score = arr[i].length() == 6 ? 54 : arr[i].length() - 2; // вычисляем количество очков для текущего слова
-            for (int j = 0; j < arr[i].length(); j++) { // проходим по символам текущего слова arr[i]
-                if (arr[i].indexOf(arr[i].charAt(j)) == -1) { //если символ не найден
-                    break;
+            int score = arr[i].length() == 6 ? 54 : arr[i].length() - 2; // Вычисляем количество очков для текущего слова
+            for (int j = 0; j < arr[i].length(); j++) { // Проходим по символам текущего слова arr[i]
+                if (arr[i].indexOf(arr[i].charAt(j)) == -1) { // Если символ не найден (не уникален)
+                    break; // Прерываем цикл, так как слово не уникальное
                 }
             }
-            res += score; // увеличиваем общее количество очков на score для текущего слова arr[i]
+            res += score; // Увеличиваем общее количество очков на score для текущего слова arr[i]
         }
-        return res;
+        return res; // Возвращаем общее количество набранных очков
     }
 
-    /* В методе sumsUp происходит поиск пар чисел в массиве arr, которые в сумме дают 8. Если такая пара найдена,
-    она добавляется в список res. Для этого используется Map<Integer, Integer> для хранения уже просмотренных чисел,
-    и проверяется каждое число массива arr, если сумма числа и ключа из Map равна 8, то пара добавляется в список.
-    Числа в паре добавляются в порядке возрастания.
+
+    /* Метод sumsUp осуществляет поиск пар чисел в массиве arr, суммируясь до значения 8. Если такая пара найдена, она
+     добавляется в список res. Для этого используется Map<Integer, Integer> для отслеживания уже просмотренных чисел.
+     Для каждого числа в массиве arr проверяется сумма числа и ключа из Map: если она равна 8, то пара чисел добавляется
+      в список. Числа в паре добавляются в порядке возрастания.
      */
     // -- 5 --
     public static ArrayList<ArrayList<Integer>> sumsUp(int[] arr) {
-        ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>(); // список списков для хранения пар чисел
-        int indexRes = 0; // для отслеживания индекса в res
+        ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>(); // Список списков для хранения пар чисел
+        int indexRes = 0; // Переменная для отслеживания индекса в res
 
-        Map<Integer, Integer> map = new HashMap<Integer, Integer>(); // для хранения чисел и их количества
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>(); // Map для хранения чисел и их количества
 
         for (int i = 0; i < arr.length; i++) {
             boolean check = true;
-            for (Integer key : map.keySet()) { //по ключам Map
-                if (key + arr[i] == 8) { // eсли сумма ключа и текущего элемента arr[i] равна 8
-                    ArrayList<Integer> cl = new ArrayList<Integer>(); // новый список
-                    cl.add(0, Math.min(key, arr[i]));
-                    cl.add(1, Math.max(key, arr[i]));
-                    res.add(indexRes, cl); // добавляем список res по индексу indexRes
-                    indexRes++; // увеличиваем индекс на 1
-                    map.remove(key, 1); // удаление ключа из Map
-                    check = false; //
+            for (Integer key : map.keySet()) { // Перебор ключей в Map
+                if (key + arr[i] == 8) { // Если сумма ключа и текущего элемента arr[i] равна 8
+                    ArrayList<Integer> cl = new ArrayList<Integer>(); // Создаем новый список
+                    cl.add(0, Math.min(key, arr[i])); // Добавляем минимальное число в пару
+                    cl.add(1, Math.max(key, arr[i])); // Добавляем максимальное число в пару
+                    res.add(indexRes, cl); // Добавляем список res по индексу indexRes
+                    indexRes++; // Увеличиваем индекс на 1
+                    map.remove(key, 1); // Удаляем ключ из Map
+                    check = false; // Сбрасываем флаг
                     break;
                 }
             }
             if (check)
-                map.put(arr[i], 1); // добавляем новый ключ в Map со значением 1
+                map.put(arr[i], 1); // Добавляем новый ключ в Map со значением 1
         }
-        return res;
+        return res; // Возвращаем список пар чисел
     }
-    /* В методе takeDownAverage вычисляется среднее значение чисел, которые представлены в виде строк с символом процента.
-    Затем вычисляется разность между средним значением и 5, умноженная на количество чисел в массиве.
-    Полученное значение округляется и приводится к строке с символом процента.
+
+    /* Метод takeDownAverage вычисляет среднее значение чисел, представленных в виде строк с символом процента.
+    Затем вычисляется разность между средним значением и 5, умноженная на количество чисел в массиве. Полученное
+    значение округляется и приводится к строке с символом процента.
      */
     // -- 6 --
     public static String takeDownAverage(String[] arr) {
-        if (arr.length == 0)//проверяем длину массива
-            return "0%";
-        double sum = 0;//будет суммироватся общее количество процентов из массива arr
+        if (arr.length == 0)
+            return "0%"; // Проверяем длину массива, возвращаем "0%", если массив пустой
+        double sum = 0; // Переменная для суммирования общего количества процентов из массива arr
         for (String str : arr) {
-            int number = Integer.parseInt(str.split("%")[0]);//каждый элемент разделяется с помощью метода split("%") на число и знак "%" и преобразуем в тип int
-            sum += number;//добавляем
+            int number = Integer.parseInt(str.split("%")[0]); // Каждый элемент разделяется на число и символ "%" и преобразуется в тип int
+            sum += number; // Добавляем число к сумме
         }
-        double avg = sum / arr.length;//вычисляется среднее значение avg путем деления суммы sum на длину массива arr
-        double res = (arr.length + 1) * (avg - 5) - sum;//вычисляется оценка, которую необходимо получитья в следующий раз
-        return Integer.toString((int) Math.round(res)) + "%";//возвращается строка, состоящая из округленной до целого числа оценки и символа "%"
+        double avg = sum / arr.length; // Вычисляем среднее значение avg путем деления суммы на количество элементов
+        double res = (arr.length + 1) * (avg - 5) - sum; // Вычисляем оценку, которую необходимо получить в следующий раз
+        return Integer.toString((int) Math.round(res)) + "%"; // Возвращается строка, состоящая из округленной до целого числа оценки и символа "%"
     }
 
-    /* В методе caesarCipher происходит шифрование или дешифрование строки str по алгоритму Цезаря с использованием
-    заданного сдвига shift. В зависимости от значения параметра mode определяется направление шифрования или дешифрования.
+
+    /* Метод caesarCipher выполняет шифрование или дешифрование строки str по алгоритму Цезаря с использованием
+     заданного сдвига shift. Направление шифрования или дешифрования определяется параметром mode.
      */
     // -- 7 --
     public static String caesarCipher(String mode, String message, int shift) {
         if (Objects.equals(mode, "decode"))
-            shift *= -1;
-        message = message.toUpperCase();
+            shift *= -1; // Если режим "decode", изменяем направление сдвига
+        message = message.toUpperCase(); // Преобразуем строку в верхний регистр
         String res = "";
         for (int i = 0; i < message.length(); i++) {
-            int el = message.codePointAt(i); //числовое значение
-            int number = el + shift;
-            if (el >= 65 && el <= 90) { // проверка на нахождения символа от A до Z
+            int el = message.codePointAt(i); // Получаем числовое значение символа
+            int number = el + shift; // Применяем сдвиг
+            if (el >= 65 && el <= 90) { // Проверяем, находится ли символ в диапазоне от A до Z
                 if (number < 65) { // Если результат сдвига меньше кода символа 'A'
                     number = 91 - (65 - number); // Возвращаемся в диапазон от 'A' до 'Z'
                 } else if (number > 90) { // Если результат сдвига больше кода символа 'Z'
                     number = 64 + (number - 90); // Возвращаемся в диапазон от 'A' до 'Z'
                 }
-                res += Character.toString((char) number);
+                res += Character.toString((char) number); // Преобразуем число обратно в символ и добавляем к результату
             } else {
-                res += Character.toString((char) el);
+                res += Character.toString((char) el); // Если символ не в диапазоне от 'A' до 'Z', добавляем его без изменений
             }
         }
+        return res; // Возвращаем результат шифрования/дешифрования
+    }
 
-        return res;
-    } // 7
 
-    /* В методе factorial рекурсивно вычисляется факториал числа n.
-    В методе setSetup вычисляется количество возможных комбинаций из n элементов по k элементов, используя факториальную
-    функцию из предыдущего метода.
-     */
+    /* Метод factorial рекурсивно вычисляет факториал числа n.
+       Метод setSetup вычисляет количество возможных комбинаций из n элементов по k элементов, используя факториальную
+       функцию из предыдущего метода.
+    */
     public static int factorial(int n) {
         if (n == 0) {
-            return 1;
+            return 1; // Возвращаем 1, если n равно 0
         }
-        return n * factorial(n - 1);
+        return n * factorial(n - 1); // Рекурсивно вычисляем факториал числа n
     }
-    // -- 8 --
+    // -- 8 -
     public static int setSetup(int n, int k) {
         if (n < k) {
-            return 0;
+            return 0; // Если n меньше k, возвращаем 0, так как невозможно составить комбинации
         }
-        return factorial(n) / factorial(n - k);
-    } // 8
+        return factorial(n) / factorial(n - k); // Вычисляем количество возможных комбинаций из n элементов по k элементов
+    }
 
-    /* В статическом блоке кода инициализируется Map cityOffsets, где ключами являются названия городов,
-    а значениями - смещения относительно времени в Лондоне. Затем в методе timeDifference происходит вычисление
-    разницы во времени между городами cityA и cityB на основе переданной временной метки timestamp.
+
+    /* В статическом блоке кода инициализируется Map cityOffsets, где ключами являются названия городов, а значениями -
+    смещения относительно времени в Лондоне. Затем в методе timeDifference происходит вычисление разницы во времени
+    между городами cityA и cityB на основе переданной временной метки timestamp.
      */
-    private static final Map<String, Duration> cityOffsets = new HashMap<>();//создается статический словарь cityOffsets
+
+    private static final Map<String, Duration> cityOffsets = new HashMap<>(); // Создается статический словарь cityOffsets
 
     static {
         cityOffsets.put("Los Angeles", Duration.ofHours(-8));
@@ -257,31 +270,33 @@ public class task5 {
 
     // -- 9 --
     public static String timeDifference(String cityA, String timestamp, String cityB) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy HH:mm", Locale.US);//объект с указанным шаблоном
-        // Из строки timestamp методом parse собирает объект dateTimeA класса LocalDateTime с использованием созданного ранее formatter.
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy HH:mm", Locale.US); // Создается объект с указанным шаблоном
+        // Из строки timestamp методом parse создается объект dateTimeA класса LocalDateTime с использованием созданного ранее formatter
         LocalDateTime dateTimeA = LocalDateTime.parse(timestamp, formatter);
 
-        Duration offsetA = cityOffsets.getOrDefault(cityA, Duration.ZERO);//получает значения из словаря, если нет то присваивает Duration.ZERO
-        LocalDateTime dateTimeB = dateTimeA.plus(offsetA);//добовляется смещение и получается новый объект
+        Duration offsetA = cityOffsets.getOrDefault(cityA, Duration.ZERO); // Получает значения из словаря, если нет - присваивает Duration.ZERO
+        LocalDateTime dateTimeB = dateTimeA.plus(offsetA); // Добавляется смещение и получается новый объект
 
         Duration offsetB = cityOffsets.getOrDefault(cityB, Duration.ZERO);
         dateTimeB = dateTimeB.plus(offsetB);
 
-        DateTimeFormatter newFormatter = DateTimeFormatter.ofPattern("yyyy-M-d HH:mm");//новый объект
-        return dateTimeB.format(newFormatter);//форматируется в строку и выводится эта строка
+        DateTimeFormatter newFormatter = DateTimeFormatter.ofPattern("yyyy-M-d HH:mm"); // Создается новый объект
+        return dateTimeB.format(newFormatter); // Форматируется в строку и возвращается эта строка
     }
+
 
     /* В методе isNew проверяется, является ли число num новым. Число считается новым, если каждая следующая цифра,
     начиная с первой, больше или равна предыдущей, за исключением нулевых цифр.
      */
     // -- 10 --
     public static boolean isNew(int num) {
-        String str = String.valueOf(num);//преобразуется в строку
-        for(int i = 1; i < str.length(); i++) {
-            if(str.charAt(i) != '0' && str.charAt(i) < str.charAt(0)) {//если текущий символ не равен нулю и меньше первого символа строки
-                return false;//то возвращается значение false
+        String str = String.valueOf(num); // Преобразуется число в строку
+        for (int i = 1; i < str.length(); i++) {
+            if (str.charAt(i) != '0' && str.charAt(i) < str.charAt(0)) { // Если текущая цифра не равна нулю и меньше первой цифры строки
+                return false; // Возвращается значение false, так как условие не выполнено
             }
         }
-        return true;
+        return true; // Возвращается значение true, если каждая последующая цифра больше или равна предыдущей или равна нулю
     }
+
 }

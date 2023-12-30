@@ -48,8 +48,8 @@ public class task6 {
     // -- 1 --
 
     public static String hiddenAnagram(String a, String b) {
-        a = a.toLowerCase().replaceAll("[^a-z]", "");       // приводят строки a и b к нижнему регистру и удаляют все символы, которые не являются буквами алфавита.
-        b = b.toLowerCase().replaceAll("[^a-z]", "");       // Таким образом, мы убираем пробелы, знаки препинания и прочие символы, оставляя только буквы.
+        a = a.toLowerCase().replaceAll("[^a-z]", ""); // приводят строки a и b к нижнему регистру и удаляют все символы, которые не являются буквами алфавита.
+        b = b.toLowerCase().replaceAll("[^a-z]", ""); // Таким образом, мы убираем пробелы, знаки препинания и прочие символы, оставляя только буквы.
 
         int[] setB = new int[26]; // 26 букв
         for (char c : b.toCharArray()) setB[c - 97]++; // проходимся по массиву и увеличиваем значение для соотв буквы
@@ -65,6 +65,7 @@ public class task6 {
         return "notfound";
     }
 
+
     // -- 2 --
 
     public static List<String> collect(String str, int n) {
@@ -73,7 +74,7 @@ public class task6 {
         } else {
             List<String> list = new ArrayList<>();
             list.add(str.substring(0, n));
-            list.addAll(collect(str.substring(n), n)); //рекурсивно добавляем
+            list.addAll(collect(str.substring(n), n));
             return list.stream().sorted().collect(Collectors.toList());
         }
     }
@@ -81,89 +82,122 @@ public class task6 {
     // -- 3 --
 
     public static String nicoCipher(String message, String key) {
-        int keyLength = key.length(); //длина ключа
-        int extraSpaces = (keyLength - (message.length() % keyLength)) % keyLength; // вычисляет количество дополнительных пробелов, которые необходимо добавить к сообщению
+        int keyLength = key.length(); // Определение длины ключа шифрования
 
-        message += new String(new char[extraSpaces]).replace("\0", " "); // добавляем дополнительные пробелы к сообщению.
+        // Определение количества дополнительных пробелов, необходимых для сообщения
+        int extraSpaces = (keyLength - (message.length() % keyLength)) % keyLength;
+
+        message += new String(new char[extraSpaces]).replace("\0", " "); // Добавление дополнительных пробелов к сообщению
 
         Integer[] order = new Integer[keyLength];
-        for (int i = 0; i < keyLength; i++) { // заполняем массив
+        for (int i = 0; i < keyLength; i++) { // Создание массива порядка столбцов
             order[i] = i;
         }
 
-        Arrays.sort(order, (a, b) -> Character.compare(key.charAt(a), key.charAt(b))); // сортируем порядок столбцов
+        Arrays.sort(order, (a, b) -> Character.compare(key.charAt(a), key.charAt(b))); // Сортировка порядка столбцов по символам ключа
 
         char[] result = new char[message.length()];
-        for (int i = 0; i < message.length(); i++) { // проходемся по всем символам
-            int columnIndex = order[i % keyLength]; // индекс столбца
-            int rowIndex = i / keyLength; // индекс строки
-            result[i] = message.charAt(rowIndex * keyLength + columnIndex); // записываем символ
+        for (int i = 0; i < message.length(); i++) { // Шифрование: перестановка символов по определенным правилам
+            int columnIndex = order[i % keyLength]; // Получение индекса столбца
+            int rowIndex = i / keyLength; // Получение индекса строки
+            result[i] = message.charAt(rowIndex * keyLength + columnIndex); // Запись символа в результирующий массив
         }
 
-        return new String(result);
+        return new String(result); // Возвращение зашифрованного сообщения
     }
+
 
     // -- 4 --
 
     public static int[] twoProduct(int[] arr, int n) {
-        HashSet<Integer> set = new HashSet<>();
-        for (int m : arr) {
-            int target = n / m; // Вычисляем второе число, которое нужно для произведения n
-            if (n % m == 0 && set.contains(target)) // Проверяем, делится ли n на текущее число m и существует ли в HashSet числовая пара для произведения n
-                return new int[] { target, m }; // Если да, возвращаем числовую пару
-            set.add(m); // Добавляем текущее число m в HashSet
+        HashSet<Integer> set = new HashSet<>(); // Создаем HashSet для хранения чисел
+
+        for (int m : arr) { // Проходим по элементам массива arr
+            int target = n / m; // Вычисляем второе число, которое нужно для получения произведения n
+
+            // Проверяем, делится ли n на текущий элемент m и существует ли в HashSet числовая пара для получения произведения n
+            if (n % m == 0 && set.contains(target)) {
+                return new int[] { target, m }; // Если находим числовую пару, возвращаем ее
+            }
+
+            set.add(m); // Добавляем текущий элемент m в HashSet
         }
+
         return new int[] {}; // Если не найдено соответствующей пары, возвращаем пустой массив
     }
+
 
     // -- 5 --
 
     public static int[] isExact(int f, int m, int n) {
+        // Проверяем, меньше ли текущее значение факториала f значения n
+        // Если да, функция вызывает саму себя с увеличенными значениями f и m + 1 для продолжения увеличения факториала
         return (f < n) ? isExact(f * (m + 1), m + 1, n) : new int[] { f, m };
-        // Если текущее значение факториала f меньше n, функция вызывает саму себя с увеличенными значениями f и m + 1, чтобы продолжить увеличивать факториал.
     }
 
     public static int[] isExact(int n) {
-        int[] res = isExact(1, 1, n);
+        int[] res = isExact(1, 1, n); // Рассчитываем факториал для числа n
+        // Проверяем, является ли рассчитанный факториал res[0] равным числу n
+        // Если да, возвращаем массив из значений факториала и m
+        // Иначе возвращаем пустой массив {}
         return (res[0] == n) ? res : new int[] {};
-        // Равен ли рассчитанный факториал res[0] числу n? Если да, возвращает массив из значений факториала и m, иначе возвращает пустой массив {}.
     }
+
 
     // -- 6 --
 
     public static String fractions(String frac) {
-        int startBracket = frac.indexOf('('); // определяет индекс открывающей скобки
-        if (startBracket != -1) {  // если есть скоба
-            String repeating = frac.substring(startBracket + 1, frac.length() - 1); // извлекает повторяющуюся часть дроби из скобок
-            frac = frac.substring(0, startBracket) + repeating.repeat(9 - repeating.length()); // продлевает до 9
+        int startBracket = frac.indexOf('('); // Находим индекс открывающей скобки
+
+        if (startBracket != -1) { // Проверяем, есть ли скобка в строке
+            // Извлекаем повторяющуюся часть дроби из скобок
+            String repeating = frac.substring(startBracket + 1, frac.length() - 1);
+            // Продлеваем повторяющуюся часть до 9 символов
+            frac = frac.substring(0, startBracket) + repeating.repeat(9 - repeating.length());
         }
-        double a = Double.parseDouble(frac); // преобразуем строку в число с плав точкой
+
+        double a = Double.parseDouble(frac); // Преобразуем строку в число с плавающей точкой
+
         int div = 2;
-        while (Math.ceil(a * div) - a * div > 0.000001) div++;
-        // выполняет цикл, чтобы найти знаменатель дроби, увеличивая делитель div до тех пор, пока разница между округленным значением не будет меньше 0.000001.
+        // Ищем знаменатель дроби, увеличивая делитель div до тех пор,
+        // пока разница между округленным значением и a * div не станет меньше 0.000001.
+        while (Math.ceil(a * div) - a * div > 0.000001) {
+            div++;
+        }
+
+        // Возвращаем дробь в формате "числитель/знаменатель"
         return (int) Math.ceil(a * div) + "/" + div;
     }
+
 
     // -- 7 --
 
     public static String pilish_string(String str) {
         String res = "";
-        String pi = String.valueOf(Math.PI).replace(".", ""); // строка с пи
+        String pi = String.valueOf(Math.PI).replace(".", ""); // Получаем строку представляющую число Пи без точки
+
         int piIndex = 0, strIndex = 0;
 
         while (strIndex < str.length()) {
-            int p = pi.charAt(piIndex++) - '0'; // извлекаю цифру
+            int p = pi.charAt(piIndex++) - '0'; // Извлекаем цифру из числа Пи
             int n = Math.min(p, str.length() - strIndex);
-            // Определяет длину текущего слова, которое будет добавлено к результату. Это минимум между текущей цифрой числа Пи и оставшейся длиной входной строки.
-            res += str.substring(strIndex, strIndex + n); // добавляет к результату слово, взятое из входной строки, соответствующее текущей цифре числа Пи.
-            strIndex += n; // увеличиваем индекс входной строки
-            if (strIndex < str.length()) res += ' '; // доавляем пробел
-            else
-                while (n++ < p) res += res.charAt(res.length() - 1);
-                // если длина текущего слова меньше, чем соответствующая цифра числа Пи, повторяет последний символ слова, чтобы сделать его равным требуемой длине.
+            // Определяем длину текущего слова, которое будет добавлено к результату.
+            // Это минимум между текущей цифрой числа Пи и оставшейся длиной входной строки.
+            res += str.substring(strIndex, strIndex + n); // Добавляем к результату слово из входной строки, соответствующее текущей цифре числа Пи.
+            strIndex += n; // Увеличиваем индекс входной строки
+            if (strIndex < str.length()) {
+                res += ' '; // Добавляем пробел, если есть еще символы в строке
+            } else {
+                // Если текущее слово короче, чем соответствующая цифра числа Пи,
+                // повторяем последний символ слова, чтобы сделать его равным требуемой длине.
+                while (n++ < p) {
+                    res += res.charAt(res.length() - 1);
+                }
+            }
         }
         return res;
     }
+
 
     // -- 8 --
 
@@ -330,58 +364,64 @@ public class task6 {
     // -- 9 --
 
     public static String isValid(String str) {
-        int[] charCounts = new int[26]; // Создание массива для подсчета частоты символов
+        int[] charCounts = new int[26]; // Создание массива для подсчета частоты символов ('a' - 'z')
         for (char c : str.toCharArray()) {
-            charCounts[c - 'a']++; // Увеличение счетчика для символа c | код a = 97
+            charCounts[c - 'a']++; // Увеличение счетчика для символа c ('a' = 97 в кодировке ASCII)
         }
+
         int prevCount = -1; // Предыдущее количество встреч символов
-        int removals = 0; // Количество символов, которые необходимо удалить
+        int removals = 0; // Количество символов, которые необходимо удалить, чтобы сделать строку валидной
+
         for (int count : charCounts) {
             if (count > 0) {
                 if (prevCount == -1) {
                     prevCount = count; // Инициализация prevCount, если еще не инициализирован
                 } else if (prevCount != count) {
-                    removals += Math.abs(prevCount - count); // Подсчет несоответствий частот символов
+                    removals += Math.abs(prevCount - count); // Подсчет разницы в частотах символов
                     if (removals > 1) return "NO"; // Если необходимо удалить более одного символа, возвращается "NO"
                 }
             }
         }
+
         return "YES"; // Если строка удовлетворяет условиям, возвращается "YES"
     }
+
 
     // -- 10 --
 
     public static String findLCS(String s1, String s2) {
-        int[][] dp = new int[s1.length() + 1][s2.length() + 1]; // Создание массива для хранения длин LCS
-        StringBuilder lcs = new StringBuilder(); // Создание объекта StringBuilder для хранения LCS
+        int[][] dp = new int[s1.length() + 1][s2.length() + 1]; // Массив для хранения длины LCS для всех подстрок
+        StringBuilder lcs = new StringBuilder(); // Переменная для хранения самой длинной общей подпоследовательности
 
-        // Начало заполнения массива dp для поиска LCS
+        // Заполнение массива dp для поиска LCS
         for (int i = 1; i <= s1.length(); i++) {
             for (int j = 1; j <= s2.length(); j++) {
                 if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
-                    dp[i][j] = dp[i - 1][j - 1] + 1; // Если символы равны, увеличиваем длину LCS
+                    dp[i][j] = dp[i - 1][j - 1] + 1; // Увеличение длины LCS на 1, если символы равны
                 } else {
-                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]); // Иначе выбираем максимальное значение из двух предыдущих
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]); // Выбор максимальной длины LCS из предыдущих значений
                 }
             }
         }
-        // Конец заполнения массива dp
+        // Завершение заполнения массива dp
 
         int i = s1.length(), j = s2.length();
 
-        // Нахождение самой длинной общей подпоследовательности
+        // Поиск самой длинной общей подпоследовательности
         while (i > 0 && j > 0) {
             if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
-                lcs.append(s1.charAt(i - 1)); // Если символы совпадают, добавляем его в LCS
+                lcs.append(s1.charAt(i - 1)); // Добавление совпадающих символов в LCS
                 i--;
                 j--;
             } else if (dp[i - 1][j] > dp[i][j - 1]) {
-                i--; // Иначе двигаемся к ячейке с более большим значением в массиве dp
+                i--; // Движение в сторону большего значения в массиве dp
             } else {
                 j--;
             }
         }
 
-        return lcs.reverse().toString(); // Возвращаем LCS в обратном порядке (так как мы добавляли символы в конец)
+        return lcs.reverse().toString(); // Возвращение LCS в обратном порядке (так как символы добавлялись в конец)
     }
 }
+
+// Конец :<
